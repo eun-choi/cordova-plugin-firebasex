@@ -145,6 +145,7 @@
 				<pod name="Firebase/Crashlytics" spec="6.34.0"/>
 				<pod name="GoogleSignIn" spec="5.0.2"/>
 				<pod name="GoogleTagManager" spec="7.1.4"/>
+				<pod name="GoogleUtilities" spec="6.7.2"/>
 			</pods>
 		</podspec>
 
