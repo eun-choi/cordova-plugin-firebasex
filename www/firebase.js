@@ -79,10 +79,6 @@ exports.setAutoInitEnabled = function (enabled, success, error) {
 };
 
 // Notifications - iOS-only
-exports.onOpenSettings = function (success, error) {
-  exec(success, error, "FirebasePlugin", "onOpenSettings", []);
-};
-
 exports.setBadgeNumber = function (number, success, error) {
     exec(success, error, "FirebasePlugin", "setBadgeNumber", [number]);
 };
@@ -91,8 +87,8 @@ exports.getBadgeNumber = function (success, error) {
     exec(success, error, "FirebasePlugin", "getBadgeNumber", []);
 };
 
-exports.grantPermission = function (success, error, requestWithProvidesAppNotificationSettings) {
-    exec(ensureBooleanFn(success), error, "FirebasePlugin", "grantPermission", [ensureBoolean(requestWithProvidesAppNotificationSettings)]);
+exports.grantPermission = function (success, error) {
+    exec(ensureBooleanFn(success), error, "FirebasePlugin", "grantPermission", []);
 };
 
 exports.hasPermission = function (success, error) {
