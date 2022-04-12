@@ -154,7 +154,7 @@
 				<pod name="Firebase/Functions" spec="8.14.0"/>
 				<pod name="Firebase/Installations" spec="8.14.0"/>
 				<pod name="GoogleSignIn" spec="5.0.2"/>
-				<pod name="GoogleTagManager" spec="7.4.0"/>
+				<pod name="GoogleTagManager" spec="7.4.1"/>
 				<pod name="GoogleUtilities" spec="7.7.0"/>
 			</pods>
 		</podspec>
