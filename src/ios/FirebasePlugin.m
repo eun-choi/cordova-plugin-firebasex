@@ -756,7 +756,7 @@ static NSMutableDictionary* traces;
 
 - (void)authenticateUserWithGoogle:(CDVInvokedUrlCommand*)command{
     @try {
-       /* __weak __auto_type weakSelf = self;
+        __weak __auto_type weakSelf = self;
         GIDConfiguration* googleSignInConfig = [[GIDConfiguration alloc] initWithClientID:[FIRApp defaultApp].options.clientID];
         [GIDSignIn.sharedInstance signInWithConfiguration:googleSignInConfig presentingViewController:self.viewController callback:^(GIDGoogleUser * _Nullable user, NSError * _Nullable error) {
           __auto_type strongSelf = weakSelf;
@@ -786,7 +786,7 @@ static NSMutableDictionary* traces;
             }
         }];
 
-        [self sendPluginNoResultAndKeepCallback:command callbackId:command.callbackId];*/
+        [self sendPluginNoResultAndKeepCallback:command callbackId:command.callbackId];
     }@catch (NSException *exception) {
         [self handlePluginExceptionWithContext:exception :command];
     }
@@ -880,7 +880,7 @@ static NSMutableDictionary* traces;
         }
 
         // If signed in with Google
-        /*if([GIDSignIn.sharedInstance currentUser] != nil){
+        if([GIDSignIn.sharedInstance currentUser] != nil){
             // Sign out of Google
             [GIDSignIn.sharedInstance disconnectWithCallback:^(NSError * _Nullable error) {
                 if (error) {
@@ -889,9 +889,9 @@ static NSMutableDictionary* traces;
 
                 [self signOutOfFirebase:command];
             }];
-        }else{*/
+        }else{
             [self signOutOfFirebase:command];
-        //}
+        }
     }@catch (NSException *exception) {
         [self handlePluginExceptionWithContext:exception :command];
     }
