@@ -31,8 +31,6 @@
 - (void)updateUserPassword:(CDVInvokedUrlCommand*)command;
 - (void)sendUserPasswordResetEmail:(CDVInvokedUrlCommand*)command;
 - (void)deleteUser:(CDVInvokedUrlCommand*)command;
-- (void)useAuthEmulator:(CDVInvokedUrlCommand*)command;
-- (void)getClaims:(CDVInvokedUrlCommand*)command;
 
 // Remote notifications
 - (void)getId:(CDVInvokedUrlCommand*)command;
@@ -41,8 +39,6 @@
 - (NSString *)hexadecimalStringFromData:(NSData *)data;
 - (void)grantPermission:(CDVInvokedUrlCommand*)command;
 - (void)hasPermission:(CDVInvokedUrlCommand*)command;
-- (void)grantCriticalPermission:(CDVInvokedUrlCommand*)command;
-- (void)hasCriticalPermission:(CDVInvokedUrlCommand*)command;
 - (void)setBadgeNumber:(CDVInvokedUrlCommand*)command;
 - (void)getBadgeNumber:(CDVInvokedUrlCommand*)command;
 - (void)subscribe:(CDVInvokedUrlCommand*)command;
@@ -137,6 +133,7 @@
 @property (nonatomic, copy) NSString *openSettingsCallbackId;
 @property (nonatomic, copy) NSString *tokenRefreshCallbackId;
 @property (nonatomic, copy) NSString *apnsTokenRefreshCallbackId;
+@property (nonatomic, copy) NSString *googleSignInCallbackId;
 @property (nonatomic, copy) NSString *appleSignInCallbackId;
 
 @property (nonatomic, retain) NSMutableArray *notificationStack;
