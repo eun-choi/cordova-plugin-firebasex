@@ -63,13 +63,13 @@
 		<!-- Default versions for Gradle dependencies -->
 		<preference name="ANDROID_PLAY_SERVICES_TAGMANAGER_VERSION" default="18.0.1" />
 		<preference name="ANDROID_PLAY_SERVICES_AUTH_VERSION" default="20.2.0" />
-		<preference name="ANDROID_FIREBASE_ANALYTICS_VERSION" default="21.0.0" />
+		<preference name="ANDROID_FIREBASE_ANALYTICS_VERSION" default="21.1.0" />
 		<preference name="ANDROID_FIREBASE_MESSAGING_VERSION" default="23.0.5" />
-		<preference name="ANDROID_FIREBASE_CONFIG_VERSION" default="21.1.0" />
+		<preference name="ANDROID_FIREBASE_CONFIG_VERSION" default="21.1.1" />
 		<preference name="ANDROID_FIREBASE_PERF_VERSION" default="20.1.0" />
 		<preference name="ANDROID_FIREBASE_AUTH_VERSION" default="21.0.6" />
 		<preference name="ANDROID_FIREBASE_INAPPMESSAGING_VERSION" default="20.1.2" />
-		<preference name="ANDROID_FIREBASE_FIRESTORE_VERSION" default="24.2.0" />
+		<preference name="ANDROID_FIREBASE_FIRESTORE_VERSION" default="24.2.1" />
 		<preference name="ANDROID_FIREBASE_FUNCTIONS_VERSION" default="20.1.0" />
 		<preference name="ANDROID_FIREBASE_IID_VERSION" default="21.1.0" /> <!-- deprecated but required by firebase-messaging -->
 		<preference name="ANDROID_FIREBASE_INSTALLATIONS_VERSION" default="17.0.1" />
@@ -145,16 +145,16 @@
 				<source url="https://cdn.cocoapods.org/"/>
 			</config>
 			<pods use-frameworks="true">
-				<pod name="Firebase/Core" spec="9.2.0"/>
-				<pod name="Firebase/Auth" spec="9.2.0"/>
-				<pod name="Firebase/Messaging" spec="9.2.0"/>
-				<pod name="Firebase/Performance" spec="9.2.0"/>
-				<pod name="Firebase/RemoteConfig" spec="9.2.0"/>
-				<pod name="Firebase/InAppMessaging" spec="9.2.0"/>
-				<pod name="Firebase/Firestore" spec="9.2.0"/>
-				<pod name="Firebase/Crashlytics" spec="9.2.0"/>
-				<pod name="Firebase/Functions" spec="9.2.0"/>
-				<pod name="Firebase/Installations" spec="9.2.0"/>
+				<pod name="Firebase/Core" spec="9.3.0"/>
+				<pod name="Firebase/Auth" spec="9.3.0"/>
+				<pod name="Firebase/Messaging" spec="9.3.0"/>
+				<pod name="Firebase/Performance" spec="9.3.0"/>
+				<pod name="Firebase/RemoteConfig" spec="9.3.0"/>
+				<pod name="Firebase/InAppMessaging" spec="9.3.0"/>
+				<pod name="Firebase/Firestore" spec="9.3.0"/>
+				<pod name="Firebase/Crashlytics" spec="9.3.0"/>
+				<pod name="Firebase/Functions" spec="9.3.0"/>
+				<pod name="Firebase/Installations" spec="9.3.0"/>
 				<pod name="GoogleSignIn" spec="5.0.2"/>
 				<pod name="GoogleTagManager" spec="7.4.1"/>
 				<pod name="GoogleUtilities" spec="7.7.0"/>
