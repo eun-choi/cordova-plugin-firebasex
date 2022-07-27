@@ -73,8 +73,8 @@
 		<preference name="ANDROID_FIREBASE_FUNCTIONS_VERSION" default="20.1.0" />
 		<preference name="ANDROID_FIREBASE_IID_VERSION" default="21.1.0" /> <!-- deprecated but required by firebase-messaging -->
 		<preference name="ANDROID_FIREBASE_INSTALLATIONS_VERSION" default="17.0.1" />
-		<preference name="ANDROID_FIREBASE_CRASHLYTICS_VERSION" default="18.2.11" />
-		<preference name="ANDROID_FIREBASE_CRASHLYTICS_NDK_VERSION" default="18.2.11" />
+		<preference name="ANDROID_FIREBASE_CRASHLYTICS_VERSION" default="18.2.12" />
+		<preference name="ANDROID_FIREBASE_CRASHLYTICS_NDK_VERSION" default="18.2.12" />
 		<preference name="ANDROID_GSON_VERSION" default="2.9.0" />
 		<preference name="ANDROID_FIREBASE_PERF_GRADLE_PLUGIN_VERSION" default="1.4.1" />
 		<preference name="ANDROID_GRPC_OKHTTP" default="1.48.0" />
