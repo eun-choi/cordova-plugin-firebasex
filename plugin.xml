@@ -96,7 +96,6 @@
 		<framework src="com.google.firebase:firebase-crashlytics-ndk:$ANDROID_FIREBASE_CRASHLYTICS_NDK_VERSION" />
 		<framework src="com.google.code.gson:gson:$ANDROID_GSON_VERSION" />
 		<framework src="io.grpc:grpc-okhttp:$ANDROID_GRPC_OKHTTP" />
-		<framework src="com.google.android.gms:play-services-safetynet:18.0.1" />
 	</platform>
 
 	<platform name="ios">
