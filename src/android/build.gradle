@@ -17,6 +17,12 @@ repositories {
     }
 }
 
+dependencies {
+    implementation ('com.google.firebase:firebase-auth:21.0.8'){
+        exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
+    }
+}
+
 apply plugin: com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsPlugin
 android {
     buildTypes {
