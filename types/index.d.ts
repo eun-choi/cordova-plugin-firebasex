@@ -198,16 +198,11 @@ export interface FirebasePlugin {
     ): void
     authenticateUserWithGoogle(
         clientId: string,
-        success?: (credential:object) => void,
+        success?: () => void,
         error?: (err: string) => void
     ): void
     authenticateUserWithApple(
-        success?: (credential:object) => void,
-        error?: (err: string) => void,
-        locale?: string,
-    ): void
-    authenticateUserWithMicrosoft(
-        success?: (credential:object) => void,
+        success?: () => void,
         error?: (err: string) => void,
         locale?: string,
     ): void
