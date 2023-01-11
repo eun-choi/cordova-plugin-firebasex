@@ -77,9 +77,9 @@
 		<preference name="ANDROID_FIREBASE_INSTALLATIONS_VERSION" default="17.1.0" />
 		<preference name="ANDROID_FIREBASE_CRASHLYTICS_VERSION" default="18.3.2" />
 		<preference name="ANDROID_FIREBASE_CRASHLYTICS_NDK_VERSION" default="18.3.2" />
-		<preference name="ANDROID_GSON_VERSION" default="2.10" />
+		<preference name="ANDROID_GSON_VERSION" default="2.10.1" />
 		<preference name="ANDROID_FIREBASE_PERF_GRADLE_PLUGIN_VERSION" default="1.4.2" />
-		<preference name="ANDROID_GRPC_OKHTTP" default="1.51.1" />
+		<preference name="ANDROID_GRPC_OKHTTP" default="1.52.0" />
 
 		<framework src="com.google.android.gms:play-services-tagmanager:$ANDROID_PLAY_SERVICES_TAGMANAGER_VERSION" />
 		<framework src="com.google.android.gms:play-services-auth:$ANDROID_PLAY_SERVICES_AUTH_VERSION" />
@@ -161,7 +161,7 @@
 				<pod name="Firebase/Installations" spec="9.6.0"/>
 				<pod name="GoogleSignIn" spec="5.0.2"/>
 				<pod name="GoogleTagManager" spec="7.4.2"/>
-				<pod name="GoogleUtilities" spec="7.10.0"/>
+				<pod name="GoogleUtilities" spec="7.11.0"/>
 			</pods>
 		</podspec>
 
