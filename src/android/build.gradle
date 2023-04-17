@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation ('com.google.firebase:firebase-auth:21.2.0'){
+    implementation ('com.google.firebase:firebase-auth:21.3.0'){
         exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
     }
 }
