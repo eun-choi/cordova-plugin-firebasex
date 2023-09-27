@@ -7,7 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.2'
         classpath 'com.google.gms:google-services:4.3.15'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
     }
 }
 repositories {
@@ -17,11 +17,11 @@ repositories {
     }
 }
 
-/*dependencies {
-    implementation ('com.google.firebase:firebase-auth:22.1.2'){
+dependencies {
+    implementation ('com.google.firebase:firebase-auth:21.3.0'){
         exclude group: 'com.google.android.gms', module: 'play-services-safetynet'
     }
-}*/
+}
 
 apply plugin: com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsPlugin
 android {
