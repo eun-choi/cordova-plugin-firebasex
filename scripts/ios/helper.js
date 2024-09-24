@@ -232,6 +232,7 @@ post_install do |installer|
         target.build_configurations.each do |config|
             config.build_settings['DEBUG_INFORMATION_FORMAT'] = '${DEBUG_INFORMATION_FORMAT}'
             config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '${IPHONEOS_DEPLOYMENT_TARGET}'
+            config.build_settings['ENABLE_BITCODE'] = 'NO'
             if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
                 config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
             end
