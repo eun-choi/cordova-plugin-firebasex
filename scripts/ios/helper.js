@@ -245,9 +245,6 @@ post_install do |installer|
                 end
             end
         end
-        if target.name == 'imglyKit'
-            'xcrun --sdk iphoneos bitcode_strip -r Pods/imglyKit/ImglyKit.xcframework/ios-arm64/ImglyKit.framework/ImglyKit -o Pods/imglyKit/ImglyKit.xcframework/ios-arm64/ImglyKit.framework/ImglyKit'
-        end
     end
 end
                 `;
