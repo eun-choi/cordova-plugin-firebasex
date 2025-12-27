@@ -13,6 +13,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -152,11 +154,12 @@ public class FirebasePlugin extends CordovaPlugin {
     protected static Context applicationContext = null;
     private static Activity cordovaActivity = null;
     private static boolean pluginInitialized = false;
+    private static boolean onPageFinished = false;
     private static ArrayList<String> pendingGlobalJS = null;
-
     protected static final String TAG = "FirebasePlugin";
     protected static final String JS_GLOBAL_NAMESPACE = "FirebasePlugin.";
     protected static final String KEY = "badge";
+    protected static final int ID_TOKEN_NOTIFY_MAX_RETRIES = 10;
     protected static final int GOOGLE_SIGN_IN = 0x1;
     protected static final String SETTINGS_NAME = "settings";
     private static final String CRASHLYTICS_COLLECTION_ENABLED = "firebase_crashlytics_collection_enabled";
@@ -174,6 +177,7 @@ public class FirebasePlugin extends CordovaPlugin {
     protected static final int POST_NOTIFICATIONS_PERMISSION_REQUEST_ID = 1;
 
     private static boolean inBackground = true;
+    private static boolean immediateMessagePayloadDelivery = false;
     private static ArrayList<Bundle> notificationStack = null;
     private static CallbackContext notificationCallbackContext;
     private static CallbackContext tokenRefreshCallbackContext;
@@ -237,6 +241,8 @@ public class FirebasePlugin extends CordovaPlugin {
                         setPreference(GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS, true);
                     }
 
+                    immediateMessagePayloadDelivery = getPluginVariableFromConfigXml("FIREBASE_MESSAGING_IMMEDIATE_PAYLOAD_DELIVERY").equals("true");
+
                     FirebaseApp.initializeApp(applicationContext);
                     mFirebaseAnalytics = FirebaseAnalytics.getInstance(applicationContext);
 
@@ -273,15 +279,31 @@ public class FirebasePlugin extends CordovaPlugin {
                     defaultChannelId = getStringResource("default_notification_channel_id");
                     defaultChannelName = getStringResource("default_notification_channel_name");
                     createDefaultChannel();
-
                     pluginInitialized = true;
-                    executePendingGlobalJavascript();
+                    // If the webview has already reported page finished, flush any pending global JS
+                    if (onPageFinished) {
+                        executePendingGlobalJavascript();
+                    }
 
                 } catch (Exception e) {
                     handleExceptionWithoutContext(e);
                 }
             }
         });
+    }
+
+    @Override
+    public Object onMessage(String id, Object data){
+        if (id == null) {
+            return super.onMessage(id, data);
+        }
+        if("onPageFinished".equals(id)){       
+            Log.d(TAG, "Page ready init javascript");
+            onPageFinished = true;
+            executePendingGlobalJavascript();
+            return null;
+        }
+        return super.onMessage(id, data);
     }
 
     @Override
@@ -594,6 +616,9 @@ public class FirebasePlugin extends CordovaPlugin {
     @Override
     public void onResume(boolean multitasking) {
         FirebasePlugin.inBackground = false;
+        if (FirebasePlugin.notificationCallbackContext != null) {
+            sendPendingNotifications();
+        }
     }
 
     @Override
@@ -611,6 +636,7 @@ public class FirebasePlugin extends CordovaPlugin {
         cordovaActivity = null;
         cordovaInterface = null;
         applicationContext = null;
+        onReset();
         super.onDestroy();
     }
 
@@ -664,11 +690,23 @@ public class FirebasePlugin extends CordovaPlugin {
 
     private void onMessageReceived(final CallbackContext callbackContext) {
         FirebasePlugin.notificationCallbackContext = callbackContext;
+        sendPendingNotifications();
+    }
+
+    private synchronized void sendPendingNotifications() {
         if (FirebasePlugin.notificationStack != null) {
-            for (Bundle bundle : FirebasePlugin.notificationStack) {
-                FirebasePlugin.sendMessage(bundle, applicationContext);
-            }
-            FirebasePlugin.notificationStack.clear();
+            this.cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+                    try {
+                        for (Bundle bundle : FirebasePlugin.notificationStack) {
+                            FirebasePlugin.sendMessage(bundle, applicationContext);
+                        }
+                        FirebasePlugin.notificationStack.clear();
+                    } catch (Exception e) {
+                        handleExceptionWithoutContext(e);
+                    }
+                }
+            });
         }
     }
 
@@ -707,7 +745,7 @@ public class FirebasePlugin extends CordovaPlugin {
     }
 
     public static void sendMessage(Bundle bundle, Context context) {
-        if (!FirebasePlugin.hasNotificationsCallback()) {
+        if (!FirebasePlugin.hasNotificationsCallback() || (inBackground && !immediateMessagePayloadDelivery)) {
             String packageName = context.getPackageName();
             if (FirebasePlugin.notificationStack == null) {
                 FirebasePlugin.notificationStack = new ArrayList<Bundle>();
@@ -3782,10 +3820,13 @@ public class FirebasePlugin extends CordovaPlugin {
     }
 
     private void executeGlobalJavascript(final String jsString) {
-        if(pluginInitialized){
+        if (pluginInitialized && onPageFinished) {
             doExecuteGlobalJavascript(jsString);
-        } else {
-            if(pendingGlobalJS == null) {
+            return;
+        }
+
+        synchronized (FirebasePlugin.class) {
+            if (pendingGlobalJS == null) {
                 pendingGlobalJS = new ArrayList<>();
             }
             pendingGlobalJS.add(jsString);
@@ -3793,15 +3834,25 @@ public class FirebasePlugin extends CordovaPlugin {
     }
 
     private void executePendingGlobalJavascript() {
-        if(pendingGlobalJS == null){
-            Log.d(TAG, "No pending global JS calls");
+        if (!pluginInitialized || !onPageFinished) {
+            Log.d(TAG, "Deferring pending global JS: pluginInitialized=" + pluginInitialized + ", onPageFinished=" + onPageFinished);
             return;
         }
-        Log.d(TAG, "Executing "+pendingGlobalJS.size()+" pending global JS calls");
-        for(String jsString : pendingGlobalJS){
+
+        ArrayList<String> toExecute;
+        synchronized (FirebasePlugin.class) {
+            if (pendingGlobalJS == null) {
+                Log.d(TAG, "No pending global JS calls");
+                return;
+            }
+            toExecute = pendingGlobalJS;
+            pendingGlobalJS = null;
+        }
+
+        Log.d(TAG, "Executing " + toExecute.size() + " pending global JS calls");
+        for (String jsString : toExecute) {
             doExecuteGlobalJavascript(jsString);
         }
-        pendingGlobalJS = null;
     }
 
     private void doExecuteGlobalJavascript(final String jsString) {
@@ -3809,7 +3860,20 @@ public class FirebasePlugin extends CordovaPlugin {
         cordovaActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                webView.loadUrl("javascript:" + jsString);
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        webView.getEngine().evaluateJavascript(jsString, null);
+                    } else {
+                        webView.loadUrl("javascript:" + jsString);
+                    }
+                } catch (Throwable t) {
+                    // Fall back to loadUrl if evaluateJavascript fails for any reason
+                    try {
+                        webView.loadUrl("javascript:" + jsString);
+                    } catch (Throwable t2) {
+                        Log.e(TAG, "Failed to execute JS: " + t2.getMessage());
+                    }
+                }
             }
         });
     }
@@ -3833,6 +3897,16 @@ public class FirebasePlugin extends CordovaPlugin {
 
     private boolean getMetaDataFromManifest(String name) throws Exception {
         return applicationContext.getPackageManager().getApplicationInfo(applicationContext.getPackageName(), PackageManager.GET_META_DATA).metaData.getBoolean(name);
+    }
+
+    private String getPluginVariableFromConfigXml(String name) {
+        String value = null;
+        try {
+            value = preferences.getString(name, null);
+        } catch (Exception e) {
+            Log.e(TAG, "Error getting "+name+" from config.xml", e);
+        }
+        return value;
     }
 
     private void setPreference(String name, boolean value) {
@@ -4066,8 +4140,24 @@ public class FirebasePlugin extends CordovaPlugin {
     }
 
     private static class IdTokenListener implements FirebaseAuth.IdTokenListener {
+        private int idTokenNotifyRetryCount = 0;
         @Override
         public void onIdTokenChanged(@NonNull FirebaseAuth firebaseAuth) {
+            // Use a listener-scoped retry counter so multiple listeners or instances don't share a global budget
+            FirebasePlugin plugin = FirebasePlugin.instance;
+
+            if (plugin == null) {
+                if (this.idTokenNotifyRetryCount < ID_TOKEN_NOTIFY_MAX_RETRIES) {
+                    Log.w(TAG, "Plugin is not ready, retry " + (this.idTokenNotifyRetryCount + 1) + "/" + ID_TOKEN_NOTIFY_MAX_RETRIES + " after 50ms");
+                    this.idTokenNotifyRetryCount++;
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> onIdTokenChanged(firebaseAuth), 50);
+                } else {
+                    Log.e(TAG, "Plugin still not initialized after " + ID_TOKEN_NOTIFY_MAX_RETRIES + " retries");
+                }
+                return;
+            }
+            // reset retry count on success
+            this.idTokenNotifyRetryCount = 0;
             try {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 user.getIdToken(true).addOnSuccessListener(new OnSuccessListener<GetTokenResult>() {

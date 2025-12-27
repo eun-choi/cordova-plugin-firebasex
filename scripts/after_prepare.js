@@ -27,15 +27,15 @@ var setupEnv = function(){
     PLATFORM = {
         IOS: {
             platformDir: IOS_DIR,
-            dest: IOS_DIR + '/App/Resources/GoogleService-Info.plist',
+            dest: IOS_DIR + '/' + appName + '/Resources/GoogleService-Info.plist',
             src: [
                 'GoogleService-Info.plist',
                 IOS_DIR + '/www/GoogleService-Info.plist',
                 'www/GoogleService-Info.plist'
             ],
-            appPlist: IOS_DIR + '/App/App-Info.plist',
-            entitlementsDebugPlist: IOS_DIR + '/App/Entitlements-Debug.plist',
-            entitlementsReleasePlist: IOS_DIR + '/App/Entitlements-Release.plist',
+            appPlist: IOS_DIR + '/' + appName + '/' + appName + '-Info.plist',
+            entitlementsDebugPlist: IOS_DIR + '/' + appName + '/Entitlements-Debug.plist',
+            entitlementsReleasePlist: IOS_DIR + '/' + appName + '/Entitlements-Release.plist',
             podFile: IOS_DIR + '/Podfile'
         },
         ANDROID: {
@@ -161,7 +161,7 @@ module.exports = function(context){
 
         if(podFileModified){
             utilities.log('Updating installed Pods');
-            execSync('pod install', {
+            execSync('pod install --repo-update', {
                 cwd: path.resolve(PLATFORM.IOS.platformDir),
                 encoding: 'utf8'
             });
