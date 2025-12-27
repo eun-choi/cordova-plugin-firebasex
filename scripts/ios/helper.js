@@ -61,8 +61,8 @@ module.exports = {
      * Used to get the path to the XCode project's .pbxproj file.
      */
     getXcodeProjectPath: function () {
-        var appName = utilities.getAppName();
-        return path.join("platforms", "ios", appName + ".xcodeproj", "project.pbxproj");
+        // var appName = utilities.getAppName();
+        return path.join("platforms", "ios", "App.xcodeproj", "project.pbxproj");
     },
 
     /**
